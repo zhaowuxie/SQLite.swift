@@ -59,13 +59,13 @@ public final class Database {
         return rowid == 0 ? nil : rowid
     }
 
-    /// The last number of changes (inserts, updates, or deletes) made to the
+    /// The last number of changes (inserts, updates, and deletes) made to the
     /// database via this connection.
     public var changes: Int {
         return Int(sqlite3_changes(handle))
     }
 
-    /// The total number of changes (inserts, updates, or deletes) made to the
+    /// The total number of changes (inserts, updates, and deletes) made to the
     /// database via this connection.
     public var totalChanges: Int { return Int(sqlite3_total_changes(handle)) }
 
