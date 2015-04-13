@@ -51,6 +51,7 @@ class DatabaseTests: SQLiteTestCase {
         db.prepare("SELECT * FROM users WHERE admin = ?", 0)
         db.prepare("SELECT * FROM users WHERE admin = ?", [0])
         db.prepare("SELECT * FROM users WHERE admin = $admin", ["$admin": 0])
+        db.prepare("SELECT * FROM users WHERE admin = \(false)" as quoted)
         // no-op assert-nothing-asserted
     }
 
@@ -59,7 +60,12 @@ class DatabaseTests: SQLiteTestCase {
         db.run("SELECT * FROM users WHERE admin = ?", 0)
         db.run("SELECT * FROM users WHERE admin = ?", [0])
         db.run("SELECT * FROM users WHERE admin = $admin", ["$admin": 0])
-        AssertSQL("SELECT * FROM users WHERE admin = 0", 4)
+        db.run("SELECT * FROM users WHERE admin = \(false)" as quoted)
+        AssertSQL("SELECT * FROM users WHERE admin = 0", 5)
+
+        var age: Int?
+        db.run("SELECT * FROM users WHERE age IS \(age)" as quoted)
+        AssertSQL("SELECT * FROM users WHERE age IS NULL")
     }
 
     func test_scalar_preparesRunsAndReturnsScalarValues() {
@@ -67,7 +73,8 @@ class DatabaseTests: SQLiteTestCase {
         XCTAssertEqual(0, db.scalar("SELECT count(*) FROM users WHERE admin = ?", 0) as! Int64)
         XCTAssertEqual(0, db.scalar("SELECT count(*) FROM users WHERE admin = ?", [0]) as! Int64)
         XCTAssertEqual(0, db.scalar("SELECT count(*) FROM users WHERE admin = $admin", ["$admin": 0]) as! Int64)
-        AssertSQL("SELECT count(*) FROM users WHERE admin = 0", 4)
+        XCTAssertEqual(0, db.scalar("SELECT count(*) FROM users WHERE admin = \(false)" as quoted) as! Int64)
+        AssertSQL("SELECT count(*) FROM users WHERE admin = 0", 5)
     }
 
     func test_transaction_executesBeginDeferred() {

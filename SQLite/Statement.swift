@@ -230,6 +230,54 @@ extension Statement: Printable {
 
 }
 
+extension Statement {
+
+    public struct Interpolation {
+
+        internal let SQL: String
+
+        internal let bindings: [Binding?]
+
+        private init(literal SQL: String = "", _ bindings: [Binding?] = []) {
+            (self.SQL, self.bindings) = (SQL, bindings)
+        }
+
+    }
+
+}
+
+// MARK: - StringInterpolationConvertible
+extension Statement.Interpolation: StringInterpolationConvertible {
+
+    public init(stringInterpolation components: Statement.Interpolation...) {
+        var (SQL, bindings) = ("", [Binding?]())
+        for (idx, component) in enumerate(components) {
+            if idx % 2 == 0 {
+                SQL += component.bindings.first as! String
+            } else {
+                SQL += component.SQL
+                bindings.extend(component.bindings)
+            }
+        }
+        self.init(literal: SQL, bindings)
+    }
+
+    public init<T: Value>(stringInterpolationSegment value: T) {
+        self.init(literal: "?", [value.datatypeValue])
+    }
+
+    public init<T: Value>(stringInterpolationSegment value: T?) {
+        self.init(literal: "?", [value?.datatypeValue])
+    }
+
+    public init<T>(stringInterpolationSegment expr: T) {
+        self.init(literal: "?", [toString(expr)])
+    }
+
+}
+
+public typealias quoted = Statement.Interpolation
+
 public func && (lhs: Statement, @autoclosure rhs: () -> Statement) -> Statement {
     if lhs.status == SQLITE_OK { lhs.run() }
     return lhs.failed ? lhs : rhs()

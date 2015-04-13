@@ -115,6 +115,15 @@ public final class Database {
         return prepare(statement).bind(bindings)
     }
 
+    /// Prepares a single SQL statement and binds parameters to it.
+    ///
+    /// :param: statement A SQL string interpolated with quoted values.
+    ///
+    /// :returns: The statement.
+    public func prepare(statement: quoted) -> Statement {
+        return prepare(statement.SQL).bind(statement.bindings)
+    }
+
     // MARK: - Run
 
     /// Runs a single SQL statement (with optional parameter bindings).
@@ -149,6 +158,15 @@ public final class Database {
     /// :returns: The statement.
     public func run(statement: String, _ bindings: [String: Binding?]) -> Statement {
         return prepare(statement).run(bindings)
+    }
+
+    /// Prepares, binds, and runs a single SQL statement.
+    ///
+    /// :param: statement A SQL string interpolated with quoted values.
+    ///
+    /// :returns: The statement.
+    public func run(statement: quoted) -> Statement {
+        return prepare(statement.SQL).run(statement.bindings)
     }
 
     // MARK: - Scalar
@@ -188,6 +206,16 @@ public final class Database {
     /// :returns: The first value of the first row returned.
     public func scalar(statement: String, _ bindings: [String: Binding?]) -> Binding? {
         return prepare(statement).scalar(bindings)
+    }
+
+    /// Prepares, binds, and runs a single SQL statement, returning the first
+    /// value of the first row.
+    ///
+    /// :param: statement A SQL string interpolated with quoted values.
+    ///
+    /// :returns: The first value of the first row returned.
+    public func scalar(statement: quoted) -> Binding? {
+        return prepare(statement.SQL).scalar(statement.bindings)
     }
 
     // MARK: - Transactions
