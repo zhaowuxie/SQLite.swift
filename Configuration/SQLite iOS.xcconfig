@@ -1,0 +1,2 @@
+#include "Base iOS.xcconfig"
+#include "SQLite Base.xcconfig"

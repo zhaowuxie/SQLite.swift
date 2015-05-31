@@ -1,0 +1,2 @@
+#include "Base Mac.xcconfig"
+#include "SQLiteCipher Base.xcconfig"

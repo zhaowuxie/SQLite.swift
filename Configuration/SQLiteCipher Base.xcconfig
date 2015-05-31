@@ -1,0 +1,7 @@
+// `import SQLiteCipher`
+PRODUCT_NAME = SQLiteCipher
+
+// Load `<sqlite3.h>` into Swift
+MODULEMAP_FILE = $(TARGET_NAME)/module.modulemap
+
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) SQLITE_HAS_CODEC

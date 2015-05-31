@@ -1,0 +1,2 @@
+#include "Base Mac.xcconfig"
+#include "SQLite Base.xcconfig"
