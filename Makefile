@@ -16,11 +16,7 @@ build:
 	$(BUILD_TOOL) $(BUILD_ARGUMENTS)
 
 test:
-ifdef XCPRETTY
-	@set -o pipefail && $(BUILD_TOOL) $(BUILD_ARGUMENTS) test | $(XCPRETTY) -c
-else
 	$(BUILD_TOOL) $(BUILD_ARGUMENTS) test
-endif
 
 coverage:
 ifdef SWIFTCOV
